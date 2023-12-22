@@ -1,21 +1,26 @@
-$containerName = '<MyBCContainerName>'
-$password = '<MyPassword>'
+$containerName = '<containerName>'
+$password = '<password>'                # should fulfil password requirements
+$type = '<type>'                        # Type: onprem, sandobx
+$imageName = '<imageName>'
+$userName = '<userName>'
+
 $securePassword = ConvertTo-SecureString -String $password -AsPlainText -Force
-$credential = New-Object pscredential 'admin', $securePassword
+$credential = New-Object pscredential $userName, $securePassword
 $auth = 'UserPassword'
-$artifactUrl = Get-BcArtifactUrl -type 'onprem' -country 'de' -select 'Latest'
+$artifactUrl = Get-BcArtifactUrl -type $type -country 'de' -select 'Latest'
 New-BcContainer `
     -accept_eula `
     -containerName $containerName `
     -credential $credential `
     -auth $auth `
     -artifactUrl $artifactUrl `
-    -imageName '<MyBCImageName>' `
+    -imageName $imageName `
     -multitenant:$false `
     -assignPremiumPlan `
     -dns '8.8.8.8' `
     -memoryLimit 8G `
-    -includeAL -doNotExportObjectsToText `
+    -includeAL `
+    -doNotExportObjectsToText `
     -vsixFile (Get-LatestAlLanguageExtensionUrl) `
     -updateHosts `
     -isolation hyperv
